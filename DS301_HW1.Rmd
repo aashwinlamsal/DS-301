@@ -69,11 +69,39 @@ cat("The first 5 fitted values are as follows: \n", firstFiveFittedValues)
 cat("\n \n The first 5 residual values are as follows: \n", firstFiveResidualValues)
 
 
+```
+## HW #1 Problem 4a
 
+```{r}
+#Reestablishing x and y variables, and creating the fitted simple linear regression model
+x = toluca$lotSize
+y = toluca$workHrs
+fit = lm(y~x)
+#summary(fit) used to double check
+n = 25
+df = n-2 #n=25, so our degrees of freedom would be: n-2 = 23
+#Calculation for the estimate of sigma squared
+
+sigmaSquaredHat = sum(fit$residuals^2)/df #sigma squared hat is equal to the summation of residual errors squared divided by n-2, which in our case is the df
+cat("Sigma squared hat = ", sigmaSquaredHat)
 
 ```
-##                      1 2 3 4 5
-## Fitted Values   347.982
+
+## HW #1 Problem 4b
+```{r}
+#Reestablishing x and y variables, and creating the fitted simple linear regression model
+x = toluca$lotSize
+y = toluca$workHrs
+fit = lm(y~x)
+
+
+#use confint() to computer confidence intervals
+
+confint(fit, level = 0.9 ) #confint uses t-quantiles from the t-distribution, confint.default uses the normal distribution/quantiles
+
+```
+The intercept represents beta-naught. The way to interpret this confidence interval is that we are 90% confident that 
+
 
 
 
