@@ -102,6 +102,40 @@ confint(fit, level = 0.9 ) #confint uses t-quantiles from the t-distribution, co
 ```
 The intercept represents beta-naught. The way to interpret this confidence interval is that we are 90% confident that our beta-naught value will fall between 17.50 and 107.23 when beta-one is equal to 0.
 
+## HW #1 Problem 4c
+```{r}
+#Reestablishing x and y variables, and creating the fitted simple linear regression model
+
+# Our hypothesis test is as follows
+# H0: beta-one = 0
+# H1: beta-one > 0
+# Significance level (alpha) = 0.05
+x = toluca$lotSize
+y = toluca$workHrs
+fit = lm(y~x)
+summary(fit)
+
+n = 25
+df = n - 2
+alpha = 0.05
+
+# From the summary fit, we know beta-one-hat = 3.57
+beta1Hat = 3.57
+# test statistic ts = beta-one-hat/se(beta-one-hat)
+#0.347 is the standard deviation of beta-one-hat, found from the summary output of our fit, which I used to calculate the standard error of beta-one-hat
+seB1Hat = 0.347/sqrt(n) #this equals 0.0694
+# calculating test statistic: ts = beta-one-hat/standard error of beta-one-hat
+ts = beta1Hat/seB1Hat
+
+#use ts and df to calculate p-value
+pVal = pt(ts, df, lower.tail = FALSE)
+
+#compare p-Value to our significance level
+decisionRule = pVal < alpha
+decisionRule
+```
+Since our p-value is less than our significance level, we reject the null hypothesis, meaning that we have evidence that beta-one is greater than 0 at the significane level of 0.05.
+
 
 
 
