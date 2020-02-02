@@ -1,0 +1,15 @@
+---
+title: "DS301_HW1"
+author: "Aashwin Lamsal"
+date: "2/2/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## HW #1 Problem 3
+
+
+
