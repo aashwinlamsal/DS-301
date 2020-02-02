@@ -95,12 +95,12 @@ y = toluca$workHrs
 fit = lm(y~x)
 
 
-#use confint() to computer confidence intervals
+#use confint() to compute confidence intervals
 
 confint(fit, level = 0.9 ) #confint uses t-quantiles from the t-distribution, confint.default uses the normal distribution/quantiles
 
 ```
-The intercept represents beta-naught. The way to interpret this confidence interval is that we are 90% confident that 
+The intercept represents beta-naught. The way to interpret this confidence interval is that we are 90% confident that our beta-naught value will fall between 17.50 and 107.23 when beta-one is equal to 0.
 
 
 
