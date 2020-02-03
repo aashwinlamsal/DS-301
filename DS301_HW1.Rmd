@@ -177,7 +177,8 @@ hist(output)
 abline(v=3)
 
 ```
-The results I got are as shown below, I know this is not the correct answer, as the results that my model predicted were too small compared to what I was supposed to get. I'm a little confused as to what I need to do, and I'll probably be coming to office hours to work through this problem later this week.
+
+## The results I got are as shown above, I know this is not the correct answer, as the results that my model predicted were too small compared to what I was supposed to get. I'm a little confused as to what I need to do, and I'll probably be coming to office hours to work through this problem later this week.
 
 
 
