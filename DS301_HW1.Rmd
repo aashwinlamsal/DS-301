@@ -113,7 +113,7 @@ The intercept represents beta-naught. The way to interpret this confidence inter
 x = toluca$lotSize
 y = toluca$workHrs
 fit = lm(y~x)
-summary(fit)
+summary(fit) 
 
 n = 25
 df = n - 2
@@ -135,6 +135,49 @@ decisionRule = pVal < alpha
 decisionRule
 ```
 Since our p-value is less than our significance level, we reject the null hypothesis, meaning that we have evidence that beta-one is greater than 0 at the significane level of 0.05.
+
+## HW #1 Problem 5
+```{r}
+# We know that the true underlying population regression line is:
+# Y_i = 2 + 3*x_i + epsilon_i
+# epsilon follows a normal distribution N(0,2^2)
+
+#beta-naught = 2
+#beta-one = 3
+#standard deviation = 2
+
+x = seq(0, 10, length.out = 100)
+
+#5a) Generate 100 observations Yi under this normal error model for the for the X values from above:
+y = 2 + 3*x
+
+#5b) Draw a scatterplot of x and y:
+plot(x,y, main = "Y vs. X", pch = 16, xlab = "x-values", ylab = "y-values")
+
+
+#5c) Design a simple simulation to show that βˆ1 is an unbiased estimator of β1
+# Taking 1000 samples of size 100
+
+output = c(1:1000)
+set.seed(1)
+for(i in output){
+  simSample = sample(y, 100, replace=FALSE)
+ 
+  simFit = lm(simSample~x)
+  output = c(output, simFit$coefficients[2])
+  
+}
+
+#remove the double counting
+output = output[1001:2000]
+#output was called to check the values, they were a lot lower than anticipated and I can't seem to get them to the range they should be at
+
+#5d) Creating the histogram
+hist(output)
+abline(v=3)
+
+# The results I got are as shown below, I know this is not the correct answer, as the results that my model predicted were too small compared to what I was supposed to get. I'm a little confused as to what I need to do, and I'll probably be coming to office hours to work through this problem later this week.
+```
 
 
 
