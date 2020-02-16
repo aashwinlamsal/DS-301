@@ -1,0 +1,105 @@
+---
+title: "DS301_HW2"
+author: "Aashwin Lamsal"
+date: "2/16/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## DS 301 Homework 2
+
+## Question 1
+```{r}
+#PART A
+library(ISLR)
+#viewing the dataset
+#head(Auto) 
+#names(Auto)
+
+#Y=mpg, and is going to become our response vector
+Y = Auto$mpg
+
+#dim(Auto) used to check the dimensions of the entire table, 392 rows by 9 columns
+
+n = dim(Auto)[1] #the dimensions of the response vector are 392 rows by 1 column
+print("Dimensions for Y")
+n
+#X=horsepower, and is going to become our design matrix
+
+X = cbind(rep(1,n), Auto$horsepower) #first column is full of 1's always
+xdim = dim(X) # the dimensions of the design matrix is 392 rows by 2 columns
+print("Dimensions for X")
+xdim
+
+#PART B
+#Calculating X transpose times X
+XtX = t(X)%*%X
+print("X transpose times X")
+XtX
+
+#Calculating X transpose times Y
+XtY = t(X)%*%Y
+print("X transpose times Y")
+XtY
+
+#Calculating the inverse of X transpose times X
+XtX_inverse = solve(XtX)
+print("The inverse of X transpose times X")
+XtX_inverse
+
+#PART C
+#Calculating least squares estimate, beta hat
+betaHat = XtX_inverse %*% XtY
+print("Beta Hat")
+betaHat
+
+#model = lm(Y~X, Auto)
+#summary(model) lm output used here to double check my results
+
+#PART D
+#plot(x=Auto$horsepower, y = Auto$mpg) plotting the relationshsip between mpg and horsepower
+
+#The response vector doesn't change, but the values in the design matrix will be squared to address the quadratic nature. The model continues to be a simple linear regression model with Y = mpg and X = horsepower^2.
+
+Xsquared = cbind(rep(1,n), (Auto$horsepower)^2)
+
+newXtX = t(Xsquared)%*%Xsquared
+print("New X transpose times X")
+newXtX
+
+newXtY = t(Xsquared)%*%Y
+print("New X transpose times Y")
+newXtY
+
+newXtX_inverse = solve(newXtX)
+print("The new inverse of X transpose times X")
+newXtX_inverse
+
+newbetaHat = newXtX_inverse %*% newXtY
+print("The new Beta Hat")
+newbetaHat
+
+#model = lm(Y~Xsquared, Auto)
+#summary(model)  again, using lm output used here to double check my results
+```
+### The dimensions of the response vector are 392 rows by 1 column.The dimensions of the design matrix is 392 rows by 2 columns. 
+
+### Answers for Part B, C, and D was displayed in the output, and written down on the attached notebook paper.
+
+## Question 2
+```{r}
+#PART A
+
+
+
+
+
+
+
+
+
+```
+
