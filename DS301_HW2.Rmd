@@ -92,14 +92,76 @@ newbetaHat
 ## Question 2
 ```{r}
 #PART A
+library(jtools)
+
+patient = read.table("/Users/aashw/Documents/DS-301/patient.txt")
+names(patient) = c("satisf","age","severe","anxiety")
+#head(patient) checking the first 6 rows
+
+#Response vector
+Y = patient$satisf
+n = dim(patient)[1]
+
+#Design matrix
+X = cbind(rep(1,n),patient$age, patient$severe, patient$anxiety)
 
 
+#Fitting the model
+model=lm(Y~age+severe+anxiety,data=patient)
+print("Output table (numbers are rounded from the lm output due to the jtools table, the exact numbers are on the notebook paper)")
+summ(model)
 
+#PART B
+#Conducting an F-Test on all of our predictors
+print("Part B")
+p = 4
+alpha = 0.05
+#Test statistic
+f_star = 30.05
 
+#p-value 
+pValue= pf(F_star,df1,df2,lower.tail=FALSE)
+print("P-value:")
+pValue
 
+#Decision Rule
+print("Is the P-Value less than our significance level? If true, reject the null hypothesis.")
+pValue < alpha
 
+#PART C
+#Conducting a T-Test on beta 1
+#Calculating least square estimators
+print("Part C")
+XtX = t(X)%*%X
 
+betaHat = solve(XtX)%*%t(X)%*%Y
 
+Yhat = X%*%betaHat  
+errors = Y - Yhat
 
+#Test statistic
+ts = -5.314796 #gotten from lm output summary
+print("Test statistic for beta 1, as given by the lm summary:")
+ts
+
+#beta 1 p-value 
+
+pValueB1 = 2*pt(abs(ts),n-p,lower.tail=FALSE)
+print("P-Value for Beta 1:")
+pValueB1
+
+#Decision Rule
+print("Is the P-Value less than our significance level? If true, reject the null hypothesis")
+pValueB1 < alpha
+
+#PART D
+print("Part D: the estimate for sigma squared (sigma hat squared) is:")
+sigma_hat = sqrt(sum(errors^2)/(n-p))
+sigma_hat_squared = (sigma_hat)^2
+sigma_hat_squared
+
+#PART E: hand written on the notebook paper
 ```
+
+### For part A, the interpretation of the summary output is on the attached notebook paper. The conclusion to part B's f-test: we reject the null hypothesis, as we found evidence that there is a relationship between a patient's satsifaction rating and, at least, one of our predictors: age, severity level, and anxiety level.
 
