@@ -25,35 +25,35 @@ Y = Auto$mpg
 #dim(Auto) used to check the dimensions of the entire table, 392 rows by 9 columns
 
 n = dim(Auto)[1] #the dimensions of the response vector are 392 rows by 1 column
-print("Dimensions for Y")
+
 n
 #X=horsepower, and is going to become our design matrix
 
 X = cbind(rep(1,n), Auto$horsepower) #first column is full of 1's always
 xdim = dim(X) # the dimensions of the design matrix is 392 rows by 2 columns
-print("Dimensions for X")
+
 xdim
 
 #PART B
 #Calculating X transpose times X
 XtX = t(X)%*%X
-print("X transpose times X")
+
 XtX
 
 #Calculating X transpose times Y
 XtY = t(X)%*%Y
-print("X transpose times Y")
+
 XtY
 
 #Calculating the inverse of X transpose times X
 XtX_inverse = solve(XtX)
-print("The inverse of X transpose times X")
+
 XtX_inverse
 
 #PART C
 #Calculating least squares estimate, beta hat
 betaHat = XtX_inverse %*% XtY
-print("Beta Hat")
+
 betaHat
 
 #model = lm(Y~X, Auto)
@@ -65,21 +65,24 @@ betaHat
 #The response vector doesn't change, but the values in the design matrix will be squared to address the quadratic nature. The model continues to be a simple linear regression model with Y = mpg and X = horsepower^2.
 
 Xsquared = cbind(rep(1,n), (Auto$horsepower)^2)
-
+#newXtX
 newXtX = t(Xsquared)%*%Xsquared
-print("New X transpose times X")
+
 newXtX
+#newXtY
 
 newXtY = t(Xsquared)%*%Y
-print("New X transpose times Y")
+
 newXtY
 
+#newXtX_inverse
 newXtX_inverse = solve(newXtX)
-print("The new inverse of X transpose times X")
+
 newXtX_inverse
 
+#newbetaHat
 newbetaHat = newXtX_inverse %*% newXtY
-print("The new Beta Hat")
+
 newbetaHat
 
 #model = lm(Y~Xsquared, Auto)
@@ -113,7 +116,7 @@ summ(model)
 
 #PART B
 #Conducting an F-Test on all of our predictors
-print("Part B")
+
 p = 4
 alpha = 0.05
 #Test statistic
@@ -132,7 +135,7 @@ pValue < alpha
 #PART C
 #Conducting a T-Test on beta 1
 #Calculating least square estimators
-print("Part C")
+
 XtX = t(X)%*%X
 
 betaHat = solve(XtX)%*%t(X)%*%Y
