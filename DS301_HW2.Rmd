@@ -173,4 +173,45 @@ par(mfrow=c(2,2))
 plot(model)
 
 ```
+## Question 5: ALL PARTS
+```{r}
+library(ggplot2)
+df = data.frame(SigmaSquaredValues = NA)
+
+#The for loop is for Part C
+for(i in (1:5000)){
+generatedValues = seq(0,10,length.out = 100)
+beta0 = 2
+beta1 = 3
+sigma_squared = 4
+n = 100
+
+#PART A
+#generating 100 observations for Y
+trueY = beta0 + beta1*generatedValues + rnorm(n,0,sd=sqrt(sigma_squared))
+
+#PART B
+#obtaining an estimator for sigma squared
+
+model5 = lm(trueY~generatedValues)
+summ(model5) #used to calculate estimates for beta0 and beta1
+
+beta0Hat = summary(model5)$coef[1,1]
+beta1Hat = summary(model5)$coef[2,1]
+
+YHat5 = beta0Hat + beta1Hat*generatedValues + rnorm(n,0,sd=sqrt(sigma_squared))
+
+error5 = trueY - YHat5
+
+
+sigma_hat_squared_5 = sqrt(sum(error5^2)/((n/2)-2))
+
+  df[i,] = sigma_hat_squared_5
+}
+
+#PART D
+ggplot(data = df, aes(x = df$SigmaSquaredValues)) + geom_histogram() + geom_vline(xintercept =4)
+#hist(df[1,])
+```
+
 
