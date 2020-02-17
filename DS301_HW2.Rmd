@@ -165,3 +165,12 @@ sigma_hat_squared
 
 ### For part A, the interpretation of the summary output is on the attached notebook paper. The conclusion to part B's f-test: we reject the null hypothesis, as we found evidence that there is a relationship between a patient's satsifaction rating and, at least, one of our predictors: age, severity level, and anxiety level.
 
+## Question 4
+```{r}
+#PART A
+print("The diagnostics plots are as follows:")
+par(mfrow=c(2,2))
+plot(model)
+
+```
+
