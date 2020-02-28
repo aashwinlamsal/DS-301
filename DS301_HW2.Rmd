@@ -177,7 +177,10 @@ par(mfrow=c(2,2))
 plot(model)
 
 ```
-## Question 5: ALL PARTS
+
+## Question 5
+
+
 ```{r}
 library(ggplot2)
 df = data.frame(SigmaSquaredValues = NA)
