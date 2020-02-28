@@ -1,0 +1,98 @@
+---
+title: "DS301_HW3"
+author: "Aashwin Lamsal"
+date: "2/27/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## DS 301 Homework 3
+
+# Question 2
+```{r}
+library(ISLR)
+library(jtools)
+#head(Credit) checking first and last 6 observations of Credit
+#tail(Credit)
+#str(Credit) used to answer part A
+#PART C
+n = dim(Credit)[1]
+
+
+X = cbind(rep(1,n),Credit$ID, Credit$Income, Credit$Limit, Credit$Rating, Credit$Cards, Credit$Age, Credit$Education, Credit$Gender, Credit$Student, Credit$Married, Credit$Ethnicity) #Design matrix for MLR
+
+fit = lm(Balance~.-ID, data = Credit)
+
+summ(fit)
+
+#PART F: Creating CreditWorth
+# Step 1: Standardize both Rating and Limit using scale()
+
+Credit$Rating = as.numeric(scale(Credit$Rating))
+Credit$Limit = as.numeric(scale(Credit$Limit))
+#Step 2-3: taking average of the standardized versions of Rating and Limit, then combining them into a new variable
+
+avgRating = mean(Credit$Rating)
+avgLimit = mean(Credit$Limit) #obtaining the averages, and subtracting them from the scaled values to center our variables before combining them
+
+Credit$Rating = Credit$Rating - avgRating
+Credit$Limit = Credit$Limit - avgLimit
+
+Credit$CreditWorth = Credit$Rating + Credit$Limit #new variable CreditWorth creation
+
+
+#PART G
+fit2= lm(Balance~.-ID-Limit-Rating+CreditWorth,data=Credit)
+summ(fit2) #interpretation on notebook paper
+
+#PART H
+Xh = data.frame(ID=0,Income=101.50, Cards=3, Age=45,Education=10, Gender=" Male", Student="No", Married="Yes", Ethnicity="Caucasian", CreditWorth=2.0, Limit=0,Rating=0)
+
+print("Prediction Output")
+predict(fit2,newdata=Xh,interval='prediction',level=0.95)  
+```
+
+## Problem 4
+```{r}
+library(jtools)
+#PART A
+set.seed(1)
+true_x1 = runif(100)
+true_x2 = 0.8*true_x1 + rnorm(100)/10
+trueY = 2 + 3*true_x1 + 0.3*true_x2 + rnorm(100,0,1.5^2)
+#PART B
+plot(true_x1, true_x2, main = "Relationship between x1 and x2")
+#PART C
+#Fitting a least squares regression model
+newModel= lm(trueY~true_x1 + true_x2)
+summ(newModel)
+
+beta0Hat = summary(newModel)$coef[1,1]
+beta1Hat = summary(newModel)$coef[2,1]
+beta2Hat = summary(newModel)$coef[3,1]
+
+newModel$coef
+
+#PART F
+newModel1 = lm(trueY~true_x1)
+#summary(newModel1) was used to get the exact p-value for true_x1
+summ(newModel1)
+
+#PART G
+newModel2 = lm(trueY~true_x2)
+#summary(newModel2) was used to get the exact p-value for true_x2
+summ(newModel2)  
+
+
+
+
+
+
+
+
+
+
+```
