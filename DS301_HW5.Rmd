@@ -9,22 +9,62 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
+## Question 1B
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+```{r}
+# Suppose p = 1 (X)
+# Y is binary (Y=0 or Y=1)
+# X|Y=0 ~ N(2,var = 3)
+# X|Y=1 ~ N(4,var = 3)
+# since we're given variance, we take the square root of 3 for our standard deviation to use in rnorm
+# Proportion of Y=0 is 0.8 and proportion of Y=1 is 0.2
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+## training data
+set.seed(10)
+x0 = rnorm(800,2,sd=sqrt(3))
+x1 = rnorm(200,4,sd=sqrt(3))
+X_train = c(x0,x1)
+Y_train = rep(c(0,1),c(800,200))
 
-```{r cars}
-summary(cars)
+data.train = as.data.frame(cbind(Y_train,X_train))
+head(data.train)
+
+## testing data
+set.seed(12)
+x0_test = rnorm(800,2,sd=sqrt(3))
+x1_test = rnorm(200,4,sd=sqrt(3))
+
+X_test = c(x0_test,x1_test)
+Y_test = rep(c(0,1),c(800,200))
+
+data.test = as.data.frame(cbind(Y_test,X_test))
+head(data.test)
+
+### Bayes classifier 
+
+#P(Y=0|X) = P(X|Y=0)P(Y=0)/P(X)
+#P(Y=1|X) = P(X|Y=1)P(Y=1)/P(X)
+
+prob_y0 = 0.8*dnorm(X_train,2,sd=sqrt(3))/(dnorm(X_train,2,sd=sqrt(3))*0.8+dnorm(X_train,4,sd=sqrt(3))*0.2)
+prob_y1 = 0.2*dnorm(X_train,4,sd=sqrt(3))/(dnorm(X_train,2,sd=sqrt(3))*0.8+dnorm(X_train,4,sd=sqrt(3))*0.2)
+
+Y = rep(1,1000)
+for(i in 1:1000){
+	if(prob_y0[i]>prob_y1[i]){
+		Y[i] = 0
+	}
+}
+
+table(Y,Y_test) #confusion matrix for the Bayes Classifier
+mean(Y!=Y_test) #Bayes Error Rate
+```
+### The interpretation of the Bayes Classifier's decision boundary is written in the word document.
+
+## Question 1C
+```{r}
+
+
+
 ```
 
-## Including Plots
 
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
