@@ -177,6 +177,20 @@ lda_error_rate
 
 false_neg = t1[1,2]/sum(t1[,2]) #false_neg
 false_pos = t1[2,1]/sum(t1[,1]) #false_pos
+
+false_neg
+false_pos
+
+lda.pred$posterior[1:10,]
+
+
+lda.class = rep(0,1000)
+lda.class[lda.pred$posterior[,2]>0.45] = 1
+t2 = table(lda.class,Y_test)
+t2
+mean(lda.class!=Y_test)
+t2[1,2]/sum(t2[,2]) #false_neg
+t2[2,1]/sum(t2[,1]) #false_pos
 ```
 ### The Bayes Error Rate is equal to 0.176 and the LDA Test Error Rate is equal to 0.18.
 
@@ -200,5 +214,106 @@ points(density(x1), col = 'red', type='l')
 
 ```
 ### The plots show the distribution of the x0 and x1 data that we generated.
+
+## Question 2
+```{r}
+spam = read.csv('C:/Users/aashw/Documents/DS-301/spambase.data', header = FALSE)
+
+#Exploring the percentage of emails are spam vs. not spam 
+
+spam_status = rep("No",4601)
+#spam$spam_status = spam_status
+spam_status_numbers = spam$V58
+
+yes_count = 0
+
+# using a for loop to iterate through the last column and assigning "Yes" to observations with a value of 1 and "No", in a new column
+for (i in 1:4601){
+  if (spam_status_numbers[i] == 1){
+    spam_status[i] = "Yes"
+    yes_count = yes_count + 1
+  } 
+}
+spam$spam_status = spam_status
+
+spam_length = length(spam$V1)
+
+no_count = 4601 - yes_count
+
+percentage_spam = yes_count/spam_length
+percentage_spam 
+
+percentage_notspam = no_count/spam_length
+percentage_notspam
+
+# Standardize our predictors. 
+
+standardized.spam = scale(spam[,-59])
+# var(standardized.spam[,50]) line used to check if scale function worked properly
+
+# Question 2B: let's split the observations into test and training
+# preserve the proportion of Yes vs. No
+set.seed(1)
+yes.index = which(spam$spam_status=='Yes')
+no.index = which(spam$spam_status=='No')
+
+
+num_yes = round((spam_length/2)*percentage_spam)
+num_no = round((spam_length/2)* percentage_notspam)
+
+
+train.yes = sample(yes.index, num_yes)
+train.no = sample(no.index, num_no)
+train = c(train.yes,train.no) #contains index numbers of observations we want in the training set
+train.X = standardized.spam[train,]
+dim(train.X)
+train.Y = spam$spam_status[train]
+fit.trainY = spam$V58[train]
+
+train.Y.factor = as.factor(train.Y)
+
+test.X = standardized.spam[-train,]
+dim(test.X)
+test.Y = spam$spam_status[-train]
+fit.testY = spam$V58[-train]
+
+# Question 2C
+knn.pred = knn(train.X,test.X, train.Y,k=8) #out of all the k values I played around with, k = 8 gave me the lowest misclassification rate (0.0191) of 1.91%.
+
+table(knn.pred,test.Y)
+mean(knn.pred!=test.Y) 
+
+#Logistic Regression
+
+#Creating new dataframe of training data
+training_glm = as.data.frame(cbind(train.X, fit.trainY))
+#fitting the training data onto the model
+glm.train = glm(train.Y.factor~train.X,data = spam, family=binomial)
+#Creating new dataframe of testing data
+testing_glm = as.data.frame(cbind(test.X, fit.testY))
+
+
+glm.probs = predict(glm.train,testing_glm,type='response')
+head(glm.probs)
+
+glm.pred = rep(0,2301)
+glm.pred[glm.probs>0.5] = 1 
+table(glm.pred,fit.testY)
+mean(glm.pred==fit.testY)
+mean(glm.pred!=fit.testY)
+
+#LDA
+library(MASS)
+lda.fit.C = lda(spam$spam_status~spam$V56+spam$V57,data=spam)
+
+lda.fit.C
+
+lda.pred.C = predict(lda.fit.C,data.test)
+tC = table(lda.pred.C$class,spam$spam_status)
+lda_error_rate = mean(lda.pred.C$class!=spam$spam_status)
+tC
+lda_error_rate
+
+```
 
 
