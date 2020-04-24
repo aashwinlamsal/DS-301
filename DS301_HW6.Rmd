@@ -11,4 +11,97 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## DS 301 Homework 6
 
+## Problem 1: Resampling Methods
+```{r}
+library(MASS)
+library(boot)
+#head(Boston)
+summary(Boston$crim)#1A: From the summary we can see that the median crime rate is equal to 0.25651
+
+mCrime = median(Boston$crim)
+mCrime
+#1B: bootstrap to obtain the standard error of mCrime
+set.seed(12)
+n = dim(Boston)[1]
+B = 1000
+bootstrap_median = rep(0,B)
+for(i in 1:B){
+## write code to take a sample from the Boston dataset with replacement
+# (hint: use the sample function)
+## now based on this sample, estimate the median crime rate
+## store that value in bootstrap_median[i]
+  index = sample(1:n,n,replace=TRUE)
+	bootsample = Boston[index,]
+	bootstrap_median[i] = median(bootsample$crim)# stores the sample medians, with replacement, in bootstrap_median
+	
+}
+
+#the standard error of the median is = 1.2533 x standard error of the mean
+
+meanSE = sd(bootstrap_median)/sqrt(length(bootstrap_median))
+bootstrap_median_se= 1.2533*meanSE
+bootstrap_median_se
+
+#1C: Create a variable that indicates whether a given suburb has a crime rate above or below the median crime rate. Call this variable Y. It will be a 1 when a suburb has a crime rate above the median and 0 when a suburb has a crime rate below the median
+Y = rep(0,dim(Boston)[1])
+for(c in 1:length(Y)){
+  if(Boston$crim[c] > median(Boston$crim)){
+    Y[c] = 1
+  }
+  else{
+    
+    Y[c] = 0
+  }
+}
+#Y successfully created the Y qualitative variable
+Boston$Y = Y
+
+#1D: Log Reg. to classify Y
+logRegY = glm(Boston$Y~Boston$nox + Boston$age, data = Boston, family = "binomial")
+
+#1E: LOO Cross Validation hard coded, NO cv.glm()
+MSE = rep(0,n)
+
+for(i in 1:n){
+	data = Boston[-i,]
+	glm.fit = glm(Boston$Y~Boston$nox+Boston$age,data = data, family = "binomial")
+	
+	test = Boston[i,]
+	yhat = predict(glm.fit,test)
+	MSE[i] = (test$Y-yhat)^2	
+}
+
+#View(MSE)
+meanMSE = mean(MSE)
+meanMSE
+#1F Fit a logistic regression model that uses the variables nox, age and rad to classify Y
+logRegY2 = glm(Boston$Y~Boston$nox + Boston$age+Boston$rad, data = Boston, family = "binomial")
+cv.err = cv.glm(Boston,logRegY)
+cv.err2 = cv.glm(Boston,logRegY2)
+names(cv.err)
+
+logRegYMSE = cv.err$delta
+logRegY2MSE = cv.err2$delta
+
+logRegYMSE
+logRegY2MSE 
+
+
+
+
+
+```
+## Problem 2: Model Selection
+```{r}
+library(leaps)
+library(ISLR)
+# Dropping Y column from Boston
+Boston$Y = NULL
+
+
+
+
+
+
+```
 
